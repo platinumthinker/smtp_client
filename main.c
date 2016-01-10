@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
     setup_debug(argc, argv);
 
     int address_count = 0, file_count = 0, show_help = 0,
-        address_flag = 0, port_flag = 0;
+        address_flag = 0, port_flag = 0, use_stdout = 0;
 
     char **addresses, **files, *stdout_str = NULL, *server_address, *server_port;
 
@@ -100,6 +100,13 @@ int main(int argc, char **argv) {
         }
         dbg("\nStdout:\n%sEnd stdout\n\n", stdout_str);
     }
+
+    int socket = init_connect(server_address, server_port);
+    if (socket > 0) {
+        close(socket);
+    }
+    /* send_message(server_address, server_port, address_count, addresses, file_count, files, stdout); */
+
 
     for (int i = 0; i < file_count; i++) {
         free(files[i]);
