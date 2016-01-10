@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <errno.h>
 
 #include <arpa/inet.h>
@@ -17,7 +18,17 @@
 
 #define FILES_MAX 256
 #define ADDRESSES_MAX 256
+#define BUFFER_READ 1024
+#define ever (;;)
+
+typedef struct _RESP{
+    int ret_code;
+    char *msg;
+} response;
+
 
 void view_help(char *file_name);
 int init_connect(char *server_address, char *server_port);
+response read_from_server(int socket);
+
 #endif //MAIN_H

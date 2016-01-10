@@ -11,6 +11,28 @@ void view_help(char *programm_name) {
     printf("  -h\tprint this message\n");
 }
 
+void free_mem(int file_count, char **files, int address_count, char **addresses,
+        int address_flag, char *server_address,
+        int port_flag, char *server_port,
+        int use_stdout, char *stdout_str) {
+
+    for (int i = 0; i < file_count; i++)
+        free(files[i]);
+    free(files);
+
+    for (int i = 0; i < address_count; i++)
+        free(addresses[i]);
+    free(addresses);
+
+    if (address_flag)
+        free(server_address);
+    if (port_flag)
+        free(server_port);
+    if(use_stdout)
+        free(stdout_str);
+
+}
+
 int main(int argc, char **argv) {
     setup_debug(argc, argv);
 
@@ -22,6 +44,7 @@ int main(int argc, char **argv) {
     addresses = (char **) malloc(ADDRESSES_MAX * sizeof(char *));
     files = (char **) malloc(FILES_MAX * sizeof(char *));
 
+    dbg("\n===========================================================\n");
     dbg("Arguments:\n");
     for (int i = 1; i < argc; i++) {
         dbg("%s ", argv[i]);
@@ -79,17 +102,17 @@ int main(int argc, char **argv) {
         dbg("\n");
     }
 
-    if (address_flag + port_flag == 0) {
-        printf("Set address and port for smtp server\n");
-        view_help(argv[0]);
-        return EXIT_FAILURE;
-    }
+    if (!address_flag)
+        server_address = "aspmx.l.google.com";
+    if (!port_flag)
+        server_port= "25";
 
     if (show_help) {
         view_help(argv[0]);
         return EXIT_SUCCESS;
     }
 
+    dbg("===========================================================\n\n");
     if (use_stdout) {
         char buf[256] = {'\0'};
         int stdout_count = 0;
@@ -99,29 +122,20 @@ int main(int argc, char **argv) {
             strcat(stdout_str, buf);
         }
         dbg("\nStdout:\n%sEnd stdout\n\n", stdout_str);
+        dbg("===========================================================\n\n");
     }
 
     int socket = init_connect(server_address, server_port);
+    response r = read_from_server(socket);
     if (socket > 0) {
+        /* send_message(socket, address_count, addresses, file_count, files, stdout); */
         close(socket);
     }
-    /* send_message(server_address, server_port, address_count, addresses, file_count, files, stdout); */
 
 
-    for (int i = 0; i < file_count; i++) {
-        free(files[i]);
-    }
-    free(files);
+    free_mem(file_count, files, address_count, addresses,
+        address_flag, server_address, port_flag, server_port,
+        use_stdout, stdout_str);
 
-    for (int i = 0; i < address_count; i++) {
-        dbg("A: %s\n", addresses[i]);
-        free(addresses[i]);
-    }
-    free(addresses);
-    free(server_address);
-    free(server_port);
-
-    if(use_stdout) {
-        free(stdout_str);
-    }
+    return 0;
 }
