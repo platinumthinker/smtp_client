@@ -9,7 +9,7 @@ void parse_arg(int argc,   char **argv,
 
     setup_debug(argc, argv);
 
-    int show_help = 0;
+    int show_help = 0, mailbox = 0;
 
     dbg("\n===========================================================\n");
     dbg("Arguments:\n");
@@ -21,9 +21,31 @@ void parse_arg(int argc,   char **argv,
                 show_help = 1;
                 break;
             } else {
-                addresses[(*address_count)] = (char *) malloc(strlen(argv[i + 1]));
-                strcpy(addresses[(*address_count)], argv[i + 1]);
+                addresses[(*address_count)] = (char *) malloc(strlen(argv[i + 1]) + 8);
+                sprintf(addresses[(*address_count)], "TO: <%s>", argv[i + 1]);
                 (*address_count)++; i++;
+                dbg("%s", argv[i]);
+            }
+        } else if (strncmp("-m", argv[i], 3) == 0) {
+            if (i == argc - 1) {
+                dbg("Invalid argument '%s'\n", argv[i]);
+                show_help = 1;
+                break;
+            } else {
+                addresses[0] = (char *) malloc(strlen(argv[i + 1]) + 10);
+                sprintf(addresses[0], "FROM: <%s>", argv[i + 1]);
+                i++; mailbox = 1;
+                dbg("%s", argv[i]);
+            }
+        } else if (strncmp("-f", argv[i], 3) == 0) {
+            if (i == argc - 1) {
+                dbg("Invalid argument '%s'\n", argv[i]);
+                show_help = 1;
+                break;
+            } else {
+                files[(*file_count)] = (char *) malloc(strlen(argv[i + 1]));
+                strcpy(files[(*file_count)], argv[i + 1]);
+                (*file_count)++; i++;
                 dbg("%s", argv[i]);
             }
         } else if (strncmp("-f", argv[i], 3) == 0) {
@@ -69,7 +91,10 @@ void parse_arg(int argc,   char **argv,
         dbg("\n");
     }
 
-    dbg("AA %d\n", (*address_flag));
+    if (mailbox == 0) {
+        addresses[0] = (char *)malloc(25);
+        sprintf(addresses[0], "FROM: <%s>", "example@example.com");
+    }
     if ((*address_flag) == 0) {
         (*server_address) = (char *)malloc(19);
         strcpy((*server_address), "aspmx.l.google.com");
@@ -83,17 +108,18 @@ void parse_arg(int argc,   char **argv,
         view_help(argv[0]);
         return;
     }
-
     dbg("===========================================================\n\n");
+
+    dbg("===========================================================\n");
     if ((*use_stdout) != 0) {
         char buf[256] = {'\0'};
         int stdout_count = 0;
         while (fgets(buf, 254, stdin) > 0) {
             stdout_count += strlen(buf);
             (*stdout_str) = realloc((*stdout_str), stdout_count);
-            strcat((*stdout_str), buf);
+            (*stdout_str) = strcat((*stdout_str), buf);
         }
-        dbg("\nStdout:\n%sEnd stdout\n\n", stdout_str);
+        dbg("Stdout:\n%sEnd stdout\n", (*stdout_str));
         dbg("===========================================================\n\n");
     }
 }
