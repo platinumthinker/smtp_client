@@ -27,6 +27,17 @@ typedef struct _RESP{
 } response;
 
 
+void free_mem(int file_count, char **files,
+        int address_count,    char **addresses,
+        int address_flag,     char *server_address,
+        int port_flag,        char *server_port,
+        int use_stdout,       char *stdout_str);
+void parse_arg(int argc,   char **argv,
+        int *file_count,    char **files,
+        int *address_count, char **addresses,
+        int *address_flag,  char **server_address,
+        int *port_flag,     char **server_port,
+        int *use_stdout,    char **stdout_str);
 void view_help(char *file_name);
 int init_connect(char *server_address, char *server_port);
 response read_from_server(int socket);
