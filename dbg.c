@@ -1,9 +1,10 @@
 #include "dbg.h"
 
 void setup_debug(int argc, char **argv) {
+    debug = 0;
     for (int i = 1; i < argc; i++) {
         if (strncmp("-d", argv[i], 3) == 0) {
-            debug_val = 1;
+            debug = 1;
             break;
         }
     }
@@ -13,7 +14,7 @@ void setup_debug(int argc, char **argv) {
 
 void dbg(const char *fmt, ...)
 {
-    if (debug_val) {
+    if (debug) {
         va_list args;
         va_start(args, fmt);
         vfprintf(stdout, fmt, args);
