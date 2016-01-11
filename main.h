@@ -14,6 +14,8 @@
 #include <sys/types.h>
 
 #include <unistd.h>
+
+#include "base64.h"
 #include "dbg.h"
 
 #define FILES_MAX 256
@@ -46,7 +48,8 @@ void parse_arg(int argc,   char **argv,
         int *address_count, char **addresses,
         int *address_flag,  char **server_address,
         int *port_flag,     char **server_port,
-        int *use_stdout,    char **stdout_str);
+        int *use_stdout,    char **stdout_str,
+        int *use_pass,      char **pass);
 void view_help(char *file_name);
 int init_connect(char *server_address, char *server_port);
 response read_from_server(int socket);

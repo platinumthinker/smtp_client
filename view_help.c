@@ -2,7 +2,9 @@
 
 void view_help(char *programm_name) {
     printf("Usage %s [OPTION...]\n", programm_name),
-    printf("  -a\tsender address\n"),
+    printf("  -m\tsender address\n"),
+    printf("  --pass\tsender pass for SMTP auth\n"),
+    printf("  -a\treceive address\n"),
     printf("  -f\tadd attachment file\n"),
     printf("  -i\tget message from stdout\n"),
     printf("  -d\tprint debug output\n"),

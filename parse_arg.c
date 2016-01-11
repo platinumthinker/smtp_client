@@ -5,7 +5,8 @@ void parse_arg(int argc,   char **argv,
         int *address_count, char **addresses,
         int *address_flag,  char **server_address,
         int *port_flag,     char **server_port,
-        int *use_stdout,    char **stdout_str) {
+        int *use_stdout,    char **stdout_str,
+        int *use_pass,      char **pass) {
 
     setup_debug(argc, argv);
 
@@ -32,10 +33,20 @@ void parse_arg(int argc,   char **argv,
                 show_help = 1;
                 break;
             } else {
-                addresses[0] = (char *) malloc(strlen(argv[i + 1]) + 10);
-                sprintf(addresses[0], "FROM: <%s>", argv[i + 1]);
+                addresses[0] = (char *) malloc(strlen(argv[i + 1]));
+                addresses[0] = strcat(addresses[0], argv[i + 1]);
                 i++; mailbox = 1;
                 dbg("%s", argv[i]);
+            }
+        } else if (strncmp("--pass", argv[i], 3) == 0) {
+            if (i == argc - 1) {
+                dbg("Invalid argument '%s'\n", argv[i]);
+                show_help = 1;
+                break;
+            } else {
+                (*pass) = (char *) malloc(strlen(argv[i + 1]));
+                (*pass) = strcat((*pass), argv[i + 1]);
+                i++; (*use_pass) = 1;
             }
         } else if (strncmp("-f", argv[i], 3) == 0) {
             if (i == argc - 1) {
