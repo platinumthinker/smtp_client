@@ -33,7 +33,7 @@ void parse_arg(int argc,   char **argv,
                 show_help = 1;
                 break;
             } else {
-                addresses[0] = (char *) malloc(strlen(argv[i + 1]));
+                addresses[0] = (char *) calloc(strlen(argv[i + 1]) + 1, sizeof(char));
                 addresses[0] = strcat(addresses[0], argv[i + 1]);
                 i++; mailbox = 1;
                 dbg("%s", argv[i]);
@@ -44,7 +44,7 @@ void parse_arg(int argc,   char **argv,
                 show_help = 1;
                 break;
             } else {
-                (*pass) = (char *) malloc(strlen(argv[i + 1]));
+                (*pass) = (char *) calloc(strlen(argv[i + 1]) + 1, sizeof(char));
                 (*pass) = strcat((*pass), argv[i + 1]);
                 i++; (*use_pass) = 1;
             }

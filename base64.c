@@ -9,12 +9,12 @@ char *encode(char *input) {
     BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
     bmem = BIO_new(BIO_s_mem());
     b64 = BIO_push(b64, bmem);
-    BIO_write(b64, input, strlen(input));
+    BIO_write(b64, input, strlen(input) + 1);
     BIO_flush(b64);
     BIO_get_mem_ptr(b64, &bptr);
 
     output = (char *) calloc (bptr->length + 1, sizeof(char));
-    memcpy(output, bptr->data, bptr->length);
+    strncat(output, bptr->data, bptr->length);
 
     BIO_free_all(b64);
     return output;
