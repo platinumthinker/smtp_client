@@ -21,10 +21,11 @@
 #define BUFFER_READ 1024
 #define ever (;;)
 #define test_result(boolean) { \
-    if (!boolean) {\
+    if (boolean == 0) {\
         free_mem(file_count, files, address_count, addresses, \
                 address_flag, server_address, port_flag, server_port, \
                 use_stdout, stdout_str); \
+        close(socket); \
         return EXIT_FAILURE; \
     }\
 }

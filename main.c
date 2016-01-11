@@ -26,10 +26,15 @@ int main(int argc, char **argv) {
     send_to_server(socket, "MAIL", addresses[0]);
     rsp = read_from_server(socket);
     test_result (rsp.ret_code == 250);
+    int sender_count = 0;
     for (int i = 1; i < address_count; i++) {
         send_to_server(socket, "RCPT", addresses[i]);
         rsp = read_from_server(socket);
+        if (rsp.ret_code == 250)
+            sender_count++;
     }
+
+    test_result (sender_count > 0);
 
     if (use_stdout == 1) {
         send_to_server(socket, "DATA", "");
