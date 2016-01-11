@@ -10,16 +10,17 @@ response read_from_server(int socket) {
             break;
 
         point += rc;
-        resp = (char *)realloc(resp, point);
-        strcat(resp, buffer);
+        resp = (char *)realloc(resp, point + 1);
+        resp = memcpy(resp + point - rc, buffer, rc);
+        resp[point] = '\0';
         find = index(resp, '\r');
         if (find > 0) {
             find = index(find, '\n');
             if (find > 0) {
-                char *str = (char *)malloc(strlen(resp));
+                char *str = (char *)calloc(2048, sizeof(char));
                 int ret = -1;
                 sscanf(resp, "%d %[^\r^\n] \r\n", &ret, str);
-                free(resp);
+                /* free(resp); */
 
                 dbg("S: %d %s\n", ret, str);
                 return (response){.ret_code = ret, .msg = str};

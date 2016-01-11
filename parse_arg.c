@@ -1,5 +1,7 @@
 #include "main.h"
 
+#define clc(add) (char *) calloc(strlen(argv[i + 1]) + add, sizeof(char))
+
 void parse_arg(int argc,   char **argv,
         int *file_count,    char **files,
         int *address_count, char **addresses,
@@ -22,7 +24,7 @@ void parse_arg(int argc,   char **argv,
                 show_help = 1;
                 break;
             } else {
-                addresses[(*address_count)] = (char *) malloc(strlen(argv[i + 1]) + 8);
+                addresses[(*address_count)] = clc(8);
                 sprintf(addresses[(*address_count)], "TO: <%s>", argv[i + 1]);
                 (*address_count)++; i++;
                 dbg("%s", argv[i]);
@@ -33,7 +35,7 @@ void parse_arg(int argc,   char **argv,
                 show_help = 1;
                 break;
             } else {
-                addresses[0] = (char *) calloc(strlen(argv[i + 1]) + 1, sizeof(char));
+                addresses[0] = clc(1);
                 addresses[0] = strcat(addresses[0], argv[i + 1]);
                 i++; mailbox = 1;
                 dbg("%s", argv[i]);
@@ -44,7 +46,7 @@ void parse_arg(int argc,   char **argv,
                 show_help = 1;
                 break;
             } else {
-                (*pass) = (char *) calloc(strlen(argv[i + 1]) + 1, sizeof(char));
+                (*pass) = clc(1);
                 (*pass) = strcat((*pass), argv[i + 1]);
                 i++; (*use_pass) = 1;
             }
@@ -54,18 +56,7 @@ void parse_arg(int argc,   char **argv,
                 show_help = 1;
                 break;
             } else {
-                files[(*file_count)] = (char *) malloc(strlen(argv[i + 1]));
-                strcpy(files[(*file_count)], argv[i + 1]);
-                (*file_count)++; i++;
-                dbg("%s", argv[i]);
-            }
-        } else if (strncmp("-f", argv[i], 3) == 0) {
-            if (i == argc - 1) {
-                dbg("Invalid argument '%s'\n", argv[i]);
-                show_help = 1;
-                break;
-            } else {
-                files[(*file_count)] = (char *) malloc(strlen(argv[i + 1]));
+                files[(*file_count)] = clc(1);
                 strcpy(files[(*file_count)], argv[i + 1]);
                 (*file_count)++; i++;
                 dbg("%s", argv[i]);
@@ -76,7 +67,7 @@ void parse_arg(int argc,   char **argv,
                 show_help = 1;
                 break;
             } else {
-                (*server_address) = (char *)malloc(strlen(argv[i + 1]));
+                (*server_address) = clc(1);
                 strcpy((*server_address), argv[i + 1]);
                 (*address_flag) = 1;
                 i++;
@@ -88,7 +79,7 @@ void parse_arg(int argc,   char **argv,
                 show_help = 1;
                 break;
             } else {
-                (*server_port) = (char *)malloc(strlen(argv[i + 1]));
+                (*server_port) = clc(1);
                 strcpy((*server_port), argv[i + 1]);
                 (*port_flag) = 1;
                 i++;

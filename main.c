@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
     }
 
     addresses[0] = realloc(addresses[0], strlen(addresses[0]) + 10);
-    char *buf_from = malloc(strlen(addresses[0]));
+    char *buf_from = calloc(strlen(addresses[0]) + 1, sizeof(char));
     strcpy(buf_from, addresses[0]);
     sprintf(addresses[0], "FROM: <%s>", buf_from);
     free(buf_from);
@@ -59,12 +59,12 @@ int main(int argc, char **argv) {
             sender_count++;
     }
 
-    test_result (sender_count > 0);
+    /* test_result (sender_count > 0); */
 
     if (use_stdout == 1) {
         send_to_server(socket, "DATA", "");
         rsp = read_from_server(socket);
-        test_result (rsp.ret_code == 354);
+        /* test_result (rsp.ret_code == 354); */
         send_body_text(socket, addresses, address_count, "Subject", stdout_str);
         rsp = read_from_server(socket);
     }
